@@ -1,52 +1,37 @@
+# http://projecteuler.net/index.php?section=problems&id=64
 # Find the number of values of N <= 10000 for which sqrt(N) has an odd period.
 
-import math
-count = 0
+# The algorithm is given on the problem page, this is just numeric manipulation
 
-for i in range(1,4) :
-	lowest = i**2 + 1
-	for j in range (lowest,(i+1)*(i+1)) :
-	#for j in range(151,152) :
-		print j
-		terms = []
-		first = i
-		#first = 12
-		num = j
-		exact = math.sqrt(num)
-		top = 1
-		bottomright = first
-		term = (top, bottomright)
-		exp = [first]
-		tries = 0
-		while term not in terms and tries < 100 :
-			topTup = (top,bottomright)
-			#exact = 1/(exact-first)
-			#first = int(math.floor(exact))
-			exp.append(first)
-			terms.append(term)
-			oldbottom = num - bottomright*bottomright
-			if oldbottom % topTup[0] != 0 :
-				print bottom, topTup
-				print "ERROR"
-				print num
-				print terms
-				print exp
-				quit()
-			bottom = oldbottom / topTup[0]
-			bottomright = bottom * first - topTup[1]
-			top = bottom
-			term = (top, bottomright)
-			first = int(math.floor(((exact + bottomright)/top)))
-			#print tries+1,first,bottom,bottomright, top,topTup
-			tries += 1
-		print exp
-		if tries == 100 :
-			print bottom, topTup
-			print "ERROR"
-			print num
-			print terms
-			print exp
-			quit()
-		elif (len(exp) - 1) % 2 == 1 :
-			count += 1
+from math import sqrt
+from useful import gcd
+
+count = 0
+for N in xrange(1, 10001) :
+  root = sqrt(N)
+  floor_root = int(root)
+  if floor_root * floor_root == N :
+    # Perfect square
+    continue
+  left_of_frac, frac_top, frac_bottom = floor_root, 1, floor_root
+
+  se = set([])
+  while True :
+    new_frac_bottom_before_reduce = N - frac_bottom*frac_bottom
+    divisor = gcd(frac_top, new_frac_bottom_before_reduce)
+    new_frac_top_int_part = new_frac_bottom_before_reduce / divisor
+    assert(frac_top == divisor)
+    new_frac_top_before_reduce = (sqrt(N) + frac_bottom)
+    new_left_of_frac = int(new_frac_top_before_reduce / new_frac_top_int_part)
+    new_frac_top = new_frac_top_before_reduce - new_left_of_frac * (new_frac_top_int_part)
+    new_frac_bottom = int(sqrt(N) - new_frac_top + 0.0001)
+    result_tuple = (new_left_of_frac, new_frac_top_int_part, new_frac_bottom)
+    if (result_tuple in se) :
+      break
+    se.add(result_tuple)
+    left_of_frac, frac_top, frac_bottom = result_tuple
+  if len(se) % 2 == 1 :
+    count += 1
+
 print count
+
