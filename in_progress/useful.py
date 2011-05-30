@@ -263,6 +263,22 @@ def doubleFactorize(n) :
 			ret.append((f,n/f))
 	return ret
 
+def numdivisors(n, primes=[]) :
+  if primes == [] :
+    primes = PrimeList(int(sqrt(n) + 1))
+  ret = 1
+  curr = 2
+  top = n
+  for p in primes :
+    count = 1
+    while top % p == 0 :
+      count += 1
+      top /= p
+    ret *= count
+    if p > top :
+      break
+  return ret
+
 def divisors(n) :
 	ret = []
 	for f in xrange(1,int(sqrt(n))+1) :
