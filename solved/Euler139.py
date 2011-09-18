@@ -1,8 +1,9 @@
 # We want to find all pythagorean triples (x,y,z) with x+y+z < 100 million
 # such that y - x divides z
 
-# Generate all primitive pythatgorean triples using the formula
-# x = m^2 - n^2, y = 2mn, z = m^2 + n^2
+# Generate all primitive pythagorean triples using the formula
+# x = m^2 - n^2, y = 2mn, z = m^2 + n^2, with the condition that m - n is odd
+# and gcd(m,n) == 1
 # Then, we will need to consider that scaling by a factor of k forms
 # another pythagorean triple with the same property
 
